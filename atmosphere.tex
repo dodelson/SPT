@@ -1,0 +1,102 @@
+\documentclass[12pt]{article}
+\usepackage[top = 2 cm, bottom = 3 cm, left = 2.5 cm, right = 1.5 cm]{geometry}
+\usepackage{authblk, cite, color, amssymb, amsmath, graphicx}
+%\usepackage{hyperref}
+\usepackage[colorlinks = true, linkcolor = blue, citecolor = red]{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\newcommand\be{\begin{equation}}
+\newcommand\ee{\end{equation}}
+\def\bea{\begin{eqnarray}}
+\def\eea{\end{eqnarray}}
+
+%\renewcommand\theequation{{\color{blue}\arabic{equation}}}
+\title{The Atsmophere}
+\begin{document}
+
+
+\section{Introduction}
+
+
+The purpose of this note is to clarify the impact of the atmosphere on both optical and microwave astronomical observations. In both cases, the atmosphere distorts the signal through a turbulent pattern that follows a Kolmogorov spectrum, characterized by a 2D spatial power spectrum scaling as $P(l)\propto l^{-11/3}$. According to Taylor’s frozen turbulence hypothesis, this turbulent pattern remains essentially frozen for timescales longer than a few seconds, while it is advected coherently by the wind. In the optical regime, variations in the index of refraction distort the wavefronts, causing distant point sources to appear blurred and displaced, an effect commonly referred to as “seeing.” In contrast, microwave observations are affected primarily by the emission from the atmosphere itself, which adds spatially varying noise, rather than by significant deflections of the incoming radiation. The reason for the difference is that the deflections are arc-second scale, which don't impact most microwave observations (typically arcminute or larger resolution), while the emission is governed by the sky temperature, which is even lower than the Earth's temperature, so very far from optical.
+
+To understand the impact of the wind, let us calculate how far a given element of the atmosphere moves over the course of a given time $t$. The physical distance it moves is $wt$, where $w$ is the transverse component of the velocity, and therefore the angular distance is
+\be
+\Delta\theta = \frac{wt\cos\theta}{h}
+\ee
+where $h$ is the height of this atmospheric slice above the telescope and $\theta$ is the angle between the telescope pointing and the vertical.
+Putting in some fiducial numbers,
+\be
+\Delta\theta = 2.9^\circ\,\frac{w}{5\,m/s}\,\frac{t}{10\,s}\, \frac{1\,km\cos\theta}{h}.
+\ee
+In optical observations, the index of refraction is roughly constant within the Fried radius, which varies from 5 to 20 cm. Thus a given sheet will be coherent over angular scales of 
+\be
+\theta_0= \frac{r_0\cos\theta}{h} = 20''\frac{r_0}{10\,cm}\,{1\,km\cos\theta}{h}.
+\ee
+Therefore, in even 1 second, when the sky moves meters, multiple {\it blobs} pass through a given line of sight. This is responsible for twinkling. Over the course of a 30 seecond exposure then, a given pixel will see $N$ such coherent spots, where 
+\be
+N=\Delta\theta/\theta_0\simeq 1500.\ee And that is the contribution from only a single layer of turbulence.
+In mm observations, though, data is often taken multiple times a second: in say 0.1 seconds, the parcel has moved only about $1.7'$. For a telescope like SPT, with a field of view larger than a degree, this means that the same parcel will remain in the field of view for a long time and will be continuously monitored.
+
+Try to understand the Fried radius. If there is only a single atmosphere layer contributing, then the structure function of the refractive index
+\be
+D_n(r) \equiv \langle [n(\vec x + \vec r) - n(\vec x)]^2\rangle = \frac{1}{2\pi^2} \int_0^\infty dk\,k\,P(k)\,\int_0^{2\pi} d\theta \left[ 1 + \cos(kr\cos\theta)\right].\ee
+Since the Kolmogorov fluctuations scale as $k^{-8/3}$ in 2D, this means that $D_n(r)$ scales as $r^{2/3}$; in 3D, it would scale as $r^{5/3}$. 
+Therefore, people write
+\be
+D_n(r) = C_n^2(h) r^{2/3}.\ee
+
+The Fried radius is defined as ``the diameter of a circular telescope aperture over which the root-mean-square (rms) phase distortion due to turbulence is approximately 1 radian.'' So,
+\be
+\delta\phi_{RMS}^2 = \left[\frac{2\pi}{\lambda}\right]^2\,r^{2/3}\,\int dh C_n^2(h)= 1.
+\ee
+
+The RMS fluctuations are the integrals of this power spectrum:
+\be
+\langle \delta n^2 \rangle_R \equiv (\delta n^{RMS}_R)^2 = [\int d^2x W_R(x) \delta n(\vec x)]^2.\ee
+%
+%
+% \int\frac{d^2l}{(2\pi)^2}\, P(l) .\ee
+%Putting in the spectrum yields
+%\be
+%\delta n_{RMS}^2 =\frac{A}{2\pi} \int_{l_o}^\infty dl\,l^{-8/3} = \frac{5A}{10\pi l_o^{5/3}}.\ee
+%
+
+\section{Time Stream to Maps}
+
+The usual way of extracting a map of the CMB is to model the time-ordered data (TOD) as
+\be
+d_t = A_{tp} T_p + n_t\ee
+where $T_p$ is the map is pixels $p$ and $A$ is the pointing matrix. Assuming that noise has mean zero and covariance $N$ means that the likelihood is
+\be
+-2\ln\mathcal{L} \propto (d_t-A_{tp} T_p) N_{tt'} (d_{t'}-A_{t'p'} T_{p'}).
+\ee
+If we maximize this with respect to $T_p$, we get
+\be -A_{tp} N_{tt'} (d_{t'}-A_{t'p'} \hat T_{p'}) = 0\ee
+or
+\be A_{tp} N_{tt'} d_{t'} = A_{tp} N_{tt'}A_{t'p'} \hat T_{p'}
+\leftrightarrow
+A^tNd = C \hat T
+\ee
+with
+\be
+C\equiv A^tN A.\ee
+Note that $\dim(C)=N_p\times N_p$.
+Taking the inverse leads to the standard formula
+\be
+\hat T = C^{-1} A^t N d.\ee
+
+Let's instead explore making a map of the moving atmosphere. In this case, the pointing matrix is actually the product --- not the matrix product --- of two matrices: $A_{tp}$ that has a 1 when the detector points to pixel $p$ at time $t$ and a zero otherwise and $W^{p'}_{tp}$, which is 1 only where the parcel that started at pixel $p'$ is located at pixel $p$ at time $t$. So at $t=0$, $W^{p'}_{0p}=\delta_{p,p'}$, but thereafter the parcel has moved to another pixel $p$ due to the wind. When the product of these two is equal to one, it means that the detector is pointing to the pixel that contains the parcel that started at $p'$. 
+%Therefore, 
+%we can define a new pointing matrix with elements
+%\be
+%B^{p'}_{tp}\equiv A_{tp} W^{p'}_{tp}.
+%\ee
+The time ordered data is
+\be
+d_t = \sum_{pp'} A_{tp} W^{p'}_{tp}T^{p'}_0.\ee
+Here $T^{p'}_0$ is the emission at time 0 in pixel $p'$. We must sum over all initial pixels $p'$ and pixels $p$ at time $t$, but it is not double counting because $W^{p'}_{tp}$ ensures that each pixel $p'$ is mapped to a single pixel $p$ at $t$. So, the $A$ factor locates where the detector is pointing at time $t$ and the $W$ factor maps that pixel $p$ on to the pixel $p'$ from which that air parcel originated. As a simple example, if arcminute pixels are ordered along an $x$-axis and a given parcel starts at the origin and the wind is blowing such that parcels move one arcminute every time step (say a tenth of a second), then $W^{0}_{t_1p}=\delta_{p,1}, W^{0}_{t_2p}=\delta_{p,2},\ldots$. 
+
+and argue that a map of atmospheric emission is obtained with
+\be
+\hat T^{p'} = \sum_{p,t,t'} \tilde C^{-1}_{pp}\, B^{p'}_{pt} \, N_{tt'}\, d_{t'} \ee
+\end{document}
