@@ -96,7 +96,11 @@ The time ordered data is
 d_t = \sum_{pp'} A_{tp} W^{p'}_{tp}T^{p'}_0.\ee
 Here $T^{p'}_0$ is the emission at time 0 in pixel $p'$. We must sum over all initial pixels $p'$ and pixels $p$ at time $t$, but it is not double counting because $W^{p'}_{tp}$ ensures that each pixel $p'$ is mapped to a single pixel $p$ at $t$. So, the $A$ factor locates where the detector is pointing at time $t$ and the $W$ factor maps that pixel $p$ on to the pixel $p'$ from which that air parcel originated. As a simple example, if arcminute pixels are ordered along an $x$-axis and a given parcel starts at the origin and the wind is blowing such that parcels move one arcminute every time step (say a tenth of a second), then $W^{0}_{t_1p}=\delta_{p,1}, W^{0}_{t_2p}=\delta_{p,2},\ldots$. 
 
-and argue that a map of atmospheric emission is obtained with
+We can argue then that a map of atmospheric emission is obtained with
 \be
-\hat T^{p'} = \sum_{p,t,t'} \tilde C^{-1}_{pp}\, B^{p'}_{pt} \, N_{tt'}\, d_{t'} \ee
+\hat T_0^{p'} = \sum_{q,t,t'} \left[ \tilde C^{p'}\right]^{-1}_{pq}\, A_{tq} W^{p'}_{tq} \, N_{tt'}\, d_{t'} \ee
+where
+\be
+\tilde C
+\ee
 \end{document}
